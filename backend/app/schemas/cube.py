@@ -31,5 +31,5 @@ class Cube(CubeInDBBase):
 
 
 # Properties stored in DB
-class TapInDB(TapInDBBase):
+class TapInDB(CubeInDBBase):
     pass
