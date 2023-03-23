@@ -2,14 +2,17 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+
 # Shared properties
 class TapBase(BaseModel):
     cube_id: int
     timestamp: int
 
+
 # Properties to receive on item creation
 class TapCreate(TapBase):
     pass
+
 
 # Properties to receive on item update
 class TapUpdate(TapBase):
@@ -29,6 +32,6 @@ class Tap(TapInDBBase):
     pass
 
 
-# Properties stored in DB
+# Additional properties stored in DB
 class TapInDB(TapInDBBase):
     pass

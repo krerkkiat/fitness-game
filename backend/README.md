@@ -8,3 +8,7 @@ PYTHONPATH=app uvicorn main:app --reload
 ```
 
 For PowerShell, need `$env:PYTHONPATH="app"`.
+
+## Templates Used
+
+- https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend
