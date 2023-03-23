@@ -1,10 +1,16 @@
-﻿using StereoKit;
+﻿using RestSharp.Authenticators;
+using RestSharp;
+using StereoKit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+
+using RestSharp;
+using RestSharp.Authenticators;
 
 namespace fitness_game
 {
@@ -37,6 +43,7 @@ namespace fitness_game
         string logText;
 
         GameState state;
+        int cubeRunningId;
         List<Cube> cubes;
         bool debugOn;
 
@@ -45,7 +52,7 @@ namespace fitness_game
             
         }
 
-        public void Init()
+        public async void Init()
         {
             floorTransform = Matrix.TS(0, -1.5f, 0, new Vec3(30, 0.1f, 30));
             floorMaterial = new Material(Shader.FromFile("floor.hlsl"));
@@ -60,10 +67,25 @@ namespace fitness_game
             logText = "";
 
             state = GameState.Setup;
+            cubeRunningId = 0;
             cubes = new List<Cube>();
             debugOn = true;
 
             Log.Subscribe(OnLog);
+
+            // Testing http client.
+            try
+            {
+                var client = new Api.ApiV1Client();
+                var seqs = await client.GetSequences();
+                foreach (var seq in seqs)
+                {
+                    Log.Info(seq.Username + ":" + seq.Cubes.Length.ToString());
+                }
+            } catch (Exception ex)
+            {
+                Log.Err(ex.ToString());
+            }
         }
 
         public void Step()
@@ -137,8 +159,9 @@ namespace fitness_game
             
             if (UI.Button("New Cube"))
             {
-                Cube cube = new Cube();
+                Cube cube = new Cube(cubeRunningId);
                 cubes.Add(cube);
+                cubeRunningId += 1;
             } else if (UI.Button("Toggle Debug"))
             {
                 debugOn = !debugOn;

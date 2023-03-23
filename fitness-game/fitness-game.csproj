@@ -71,6 +71,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Api\ApiV1.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Cube.cs" />
     <Compile Include="Program.cs" />
@@ -101,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.9" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>109.0.1</Version>
+    </PackageReference>
     <PackageReference Include="StereoKit" Version="0.3.*" />
   </ItemGroup>
   <ItemGroup>
