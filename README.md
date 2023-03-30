@@ -8,12 +8,9 @@
 
 ## Milestone
 
-- [ ] Finalize touch detection and bound manipulation.
-- [ ] Implement backend endpoint for submiting a sequence.
-- [ ] Implement a backend endpoint for listing submitted sequences.
-- [ ] Implement a backend endpoint for match making room.
-- [ ] Implement a backend endpoint for websocket relay.
-- [ ] Implement basic account system.
+Milestone is now tracked by https://github.com/krerkkiat/fitness-game/milestones
+
+List of all features can be found in GitHub's Project https://github.com/users/krerkkiat/projects/2
 
 ## Concepts
 
@@ -84,7 +81,7 @@ One sentence summary: Tapping on series of circles appearing on the wall - the g
 
 ## Current Roadblock
 
-- Tapping on the "wall" does not create the event we is expecting.
+- (solved) Tapping on the "wall" does not create the event we is expecting.
 
 ## Assets Contribution
 
