@@ -74,6 +74,7 @@
     <Compile Include="Api\ApiV1.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Cube.cs" />
+    <Compile Include="MainMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -111,6 +112,7 @@
     <PackageReference Include="StereoKit" Version="0.3.*" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Clipboard.glb" />
     <None Include="Assets\Wooden Wall.glb" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '16.0' ">

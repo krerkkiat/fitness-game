@@ -5,10 +5,8 @@ using Windows.ApplicationModel;
 
 namespace fitness_game
 {
-    
     class Program
     {
-        
         static void Main(string[] args)
         {
             App app = new App();

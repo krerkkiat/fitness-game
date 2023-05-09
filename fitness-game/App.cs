@@ -22,6 +22,20 @@ namespace fitness_game
         Playing
     }
 
+    class Tap
+    {
+        public int cubeId;
+        public Cube cube;
+        public float timestamp;
+
+        public Tap(int cubeId, Cube cube, float timestamp) {
+            this.cubeId = cubeId;
+            this.cube = cube;
+            this.timestamp = timestamp;
+        }
+    }
+
+
     class App
     {
         SKSettings settings = new SKSettings
@@ -42,10 +56,16 @@ namespace fitness_game
         List<string> logList;
         string logText;
 
+        // MainMenu
+        bool showMainMenu;
+        MainMenu mainMenu;
+
         GameState state;
         int cubeRunningId;
         List<Cube> cubes;
         bool debugOn;
+
+        List<Tap> taps;
 
         public App()
         {
@@ -61,15 +81,19 @@ namespace fitness_game
             logPose = new Pose();
             // Position the log window right in front of the user's center of the eyes.
             // Set the window to face the user center of the eyes.
-            logPose.position = Input.Head.position + Input.Head.Forward * 0.5f;
+            logPose.position = Input.Head.position + Input.Head.Forward * 0.5f + Input.Head.Up * 0.7f;
             logPose.orientation = Quat.LookAt(logPose.position, Input.Head.position);
             logList = new List<string>();
             logText = "";
 
-            state = GameState.Setup;
+            // MainMenu Init
+            mainMenu = new MainMenu(this);
+
+            state = GameState.Idle;
             cubeRunningId = 0;
             cubes = new List<Cube>();
-            debugOn = true;
+            debugOn = false;
+            showMainMenu = true;
 
             Log.Subscribe(OnLog);
 
@@ -96,6 +120,11 @@ namespace fitness_game
             LogWindow();
             DrawWorldOriginIndicator();
             UI.ShowVolumes = debugOn;
+
+            if (showMainMenu)
+            {
+                mainMenu.Step();
+            }
 
             DrawHandMenu(Handed.Left);
 
@@ -157,12 +186,17 @@ namespace fitness_game
 
             UI.WindowBegin("HandMenu", ref menuPose, size * U.cm, UIWin.Empty);
             
+            if (UI.Button("Toggle Main Menu"))
+            {
+                showMainMenu = !showMainMenu;
+            }
             if (UI.Button("New Cube"))
             {
-                Cube cube = new Cube(cubeRunningId);
+                Cube cube = new Cube(this, cubeRunningId);
                 cubes.Add(cube);
                 cubeRunningId += 1;
-            } else if (UI.Button("Toggle Debug"))
+            }
+            if (UI.Button("Toggle Debug"))
             {
                 debugOn = !debugOn;
             }
@@ -174,6 +208,41 @@ namespace fitness_game
             UI.WindowBegin("Log", ref logPose, new Vec2(40, 0) * U.cm);
             UI.Text(logText);
             UI.WindowEnd();
+        }
+
+        public void SetGameState(GameState state)
+        {
+            this.state = state;
+        }
+
+        public GameState GetGameState()
+        {
+            return state;
+        }
+
+        public void AddCube(Cube cube)
+        {
+            cubes.Add(cube);
+            cubeRunningId += 1;
+        }
+
+        public int GetCubeRunningId()
+        {
+            return cubeRunningId;
+        }
+
+        public void StartPlay() {
+            state = GameState.Playing;
+            taps = new List<Tap>();
+        }
+
+        public void StopPlay() {
+            state = GameState.Idle;
+            // TODO: Record the sequences.
+        }
+
+        public void TapCube(int cubeId, Cube cube, float timeSinceLastTap) {
+            taps.Add(new Tap(cubeId, cube, timeSinceLastTap));
         }
     }
 }
