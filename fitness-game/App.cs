@@ -12,6 +12,12 @@ using System.Threading.Tasks;
 using RestSharp;
 using RestSharp.Authenticators;
 
+using fitness_game.Api;
+
+using System.Net.Sockets;
+using System.Net;
+using Windows.Media.Protection.PlayReady;
+
 namespace fitness_game
 {
 
@@ -143,8 +149,8 @@ namespace fitness_game
         void OnLog(LogLevel level, string text)
         {
             if (logList.Count > 15)
-                logList.RemoveAt(logList.Count - 1);
-            logList.Insert(0, text.Length < 100 ? text : text.Substring(0, 100) + "...\n");
+                logList.RemoveAt(0);
+            logList.Add(text.Length < 100 ? text : text.Substring(0, 100) + "...\n");
 
             logText = "";
             for (int i = 0; i < logList.Count; i++)
@@ -243,6 +249,50 @@ namespace fitness_game
 
         public void TapCube(int cubeId, Cube cube, float timeSinceLastTap) {
             taps.Add(new Tap(cubeId, cube, timeSinceLastTap));
+        }
+
+        public void UploadSequence()
+        {
+            var message = "Hello World";
+            var message_bytes = Encoding.UTF8.GetBytes(message);
+
+            uint payload_length = (uint)message_bytes.Length;
+            Log.Info($"Payload Length: {payload_length}");
+            // BitConverter returns little endian.
+            byte[] length_bytes = BitConverter.GetBytes(payload_length).Reverse().ToArray();
+
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.85"), 5051);
+            Socket socket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            socket.Connect(ipEndPoint);
+
+            Log.Info("Connected");
+
+            socket.Send(length_bytes, SocketFlags.None);
+            socket.Send(message_bytes, SocketFlags.None);
+
+            Log.Info("Sent!");
+
+            // Reading back the reply.
+            byte[] length_buffer = new byte[4];
+            var received = socket.Receive(length_buffer, SocketFlags.None);
+            uint data_length = BitConverter.ToUInt32(length_buffer.Reverse().ToArray(), 0);
+            Log.Info($"Received data length: {data_length}");
+            Log.Info($"Raw data length:{BitConverter.ToString(length_buffer)}");
+
+
+            byte[] payload_buffer = new byte[data_length];
+            var received2 = socket.Receive(payload_buffer);
+            Log.Info(BitConverter.ToString(payload_buffer));
+
+            var response = Encoding.UTF8.GetString(payload_buffer, 0, received2);
+            Log.Info($"Got: {response}");
+
+
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Disconnect(false);
+            socket.Dispose();
+
+            Log.Info("Bye");
         }
     }
 }

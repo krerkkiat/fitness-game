@@ -108,6 +108,11 @@ namespace fitness_game
                 }
             }
 
+            if (UI.Button("Upload"))
+            {
+                var task = Task.Run(parent.UploadSequence);
+            }
+
             if (UI.Button("Back"))
             {
                 page = MainMenuPage.Main;

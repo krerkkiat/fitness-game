@@ -7,7 +7,9 @@ import fitness_pb2
 
 async def read_with_length_prefix(reader):
     len_bytes = await reader.readexactly(4)
+    print(f"Len in bytes form: {len_bytes!r}")
     payload_len = struct.unpack(">L", len_bytes)[0]
+    print(f"Len in int form: {payload_len}")
     payload = await reader.readexactly(payload_len)
     return payload_len, payload
 
