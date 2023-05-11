@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcFitnessGameClient";
+
+message Quat {
+	float w = 1;
+	float x = 2;
+	float y = 3;
+	float z = 4;
+}
+
+message Pose {
+	float x = 1;
+	float y = 2;
+	float z = 3;
+	Quat quat = 4;
+}
+
+message Cube {
+	uint64 id = 1;
+	Pose pose = 2;
+}
+
+message Tap {
+	uint64 cube_id = 1;
+	uint64 timestamp = 2;
+}
+
+message Sequence {
+	string name = 1;
+	repeated Cube cubes = 2;
+	repeated Tap taps = 3;
+}
+
+message AddSequenceRequest {
+  string username = 1;
+  Sequence sequence = 3;
+}
+
+message AddSequenceReply {
+  string message = 1;
+}
+
+message GetSequenceListRequest {
+	uint64 begin = 1;
+	uint64 count = 2;
+}
+
+message GetSequenceListReply {
+	repeated Sequence sequences = 1;
+}
